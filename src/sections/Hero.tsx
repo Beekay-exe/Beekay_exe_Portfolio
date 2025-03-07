@@ -73,11 +73,14 @@ export const HeroSection = () => {
         localStorage.setItem('locationDataTimestamp', Date.now().toString());
 
         setLocationData(normalizedData);
-      } catch (fetchError) {
-        if (fetchError.name === 'AbortError') {
-          throw new Error('Request timed out. Using fallback location service...');
+      } catch (fetchError: unknown) {
+        if (fetchError instanceof Error) {
+          if (fetchError.name === 'AbortError') {
+            throw new Error('Request timed out. Using fallback location service...');
+          }
+          throw fetchError;
         }
-        throw fetchError;
+        throw new Error('An unknown error occurred');
       }
     } catch (error) {
       console.error('Error fetching location:', error);
