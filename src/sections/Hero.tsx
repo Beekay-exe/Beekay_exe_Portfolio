@@ -101,7 +101,7 @@ export const HeroSection = () => {
             <div className="relative rounded-full overflow-hidden">
               <div className={`absolute inset-0 ${isDemonMode ? 'animate-flicker' : 'glitch-effect'}`}></div>
               <Image
-                src="/avatar.jpg"
+                src="/Avatar.jpg"
                 alt="Bharath Kumar"
                 width={400}
                 height={400}
