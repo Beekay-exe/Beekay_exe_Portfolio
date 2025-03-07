@@ -1,10 +1,6 @@
 # Bharath Kumar's Portfolio
 
-![Portfolio Preview](public/Avatar.jpg)
-
 A cyberpunk-themed personal portfolio website built with Next.js and TypeScript, featuring a unique Matrix-style animation and dynamic theme switching.
-
-🔗 [Live Demo](https://beekay-exe.vercel.app/)
 
 ## 🚀 Features
 
