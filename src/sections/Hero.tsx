@@ -41,30 +41,44 @@ export const HeroSection = () => {
         }
       }
 
-      // If no cache or expired, fetch new data
-      const response = await fetch('https://ipapi.co/json/');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // If no cache or expired, fetch new data with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+      try {
+        const response = await fetch('https://ipapi.co/json/', {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        // Normalize the data structure
+        const normalizedData = {
+          ip: data.ip,
+          city: data.city,
+          region: data.region,
+          country_name: data.country_name,
+          latitude: data.latitude,
+          longitude: data.longitude,
+          org: data.org,
+          asn: data.asn
+        };
+
+        // Cache the data
+        localStorage.setItem('locationData', JSON.stringify(normalizedData));
+        localStorage.setItem('locationDataTimestamp', Date.now().toString());
+
+        setLocationData(normalizedData);
+      } catch (fetchError) {
+        if (fetchError.name === 'AbortError') {
+          throw new Error('Request timed out. Using fallback location service...');
+        }
+        throw fetchError;
       }
-      const data = await response.json();
-
-      // Normalize the data structure
-      const normalizedData = {
-        ip: data.ip,
-        city: data.city,
-        region: data.region,
-        country_name: data.country_name,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        org: data.org,
-        asn: data.asn
-      };
-
-      // Cache the data
-      localStorage.setItem('locationData', JSON.stringify(normalizedData));
-      localStorage.setItem('locationDataTimestamp', Date.now().toString());
-
-      setLocationData(normalizedData);
     } catch (error) {
       console.error('Error fetching location:', error);
       setError(error instanceof Error ? error.message : 'Failed to fetch location data');
@@ -78,15 +92,14 @@ export const HeroSection = () => {
   }, [getLocation]);
 
   const formatLocationData = () => {
-    if (error) return `> Error: ${error}\n> Please try again later.`;
-    if (isLoading) return '> Scanning visitor location...\n> Please wait...';
+    if (error) return `> Error: ${error}`;
+    if (isLoading) return '> Scanning...';
     if (!locationData) return '> No location data available.';
     
-    return `> Running system scan...\n` +
-           `> Detected IP: ${locationData.ip || 'Unknown'}\n` +
-           `> Location: ${locationData.city || 'Unknown'}, ${locationData.region || 'Unknown'}, ${locationData.country_name || 'Unknown'}\n` +
-           `> Coordinates: [${locationData.latitude || '0'}, ${locationData.longitude || '0'}]\n` +
-           `> Ah, There you are!`;
+    return `> Scan complete!\n` +
+           `> IP: ${locationData.ip || 'Unknown'}\n` +
+           `> Location: ${locationData.city || 'Unknown'}, ${locationData.country_name || 'Unknown'}\n` +
+           `> Found you!`;
   };
 
   return (
@@ -189,12 +202,12 @@ export const HeroSection = () => {
               } pt-4`}>
                 <TypeAnimation
                   sequence={[
-                    4000,
+                    1000,
                     '$ ./scan_visitor.sh\n' + formatLocationData(),
                     1000,
                   ]}
                   wrapper="span"
-                  speed={50}
+                  speed={99}
                   repeat={0}
                   className="text-xs md:text-sm whitespace-pre-line leading-relaxed block"
                 />

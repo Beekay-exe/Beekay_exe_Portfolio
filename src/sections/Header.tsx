@@ -97,7 +97,7 @@ export const Header = () => {
                 {/* Demon Mode Switch */}
                 <button
                   onClick={toggleDemonMode}
-                  className={`hidden md:flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
                     isDemonMode ? 'text-[#ff0000] hover:text-[#ff0000]/90' : 'text-[#00ff00] hover:text-[#00ff00]/90'
                   } transition-colors`}
                 >
@@ -108,7 +108,9 @@ export const Header = () => {
 
                 {/* Mobile Menu Button */}
                 <button 
-                  className="md:hidden text-[#00ff00]/70 focus:outline-none hover:text-[#00ff00]/90 transition-colors"
+                  className={`md:hidden focus:outline-none transition-colors ${
+                    isDemonMode ? 'text-[#ff0000]/70 hover:text-[#ff0000]/90' : 'text-[#00ff00]/70 hover:text-[#00ff00]/90'
+                  }`}
                   onClick={toggleMenu}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,7 +127,9 @@ export const Header = () => {
               isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
             }`}>
               <div className="flex justify-end">
-                <button onClick={toggleMenu} className="text-[#00ff00]/70 hover:text-[#00ff00]/90 transition-colors">
+                <button onClick={toggleMenu} className={`transition-colors ${
+                  isDemonMode ? 'text-[#ff0000]/70 hover:text-[#ff0000]/90' : 'text-[#00ff00]/70 hover:text-[#00ff00]/90'
+                }`}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -143,7 +147,7 @@ export const Header = () => {
                         : isDemonMode ? 'hover:text-[#ff0000]/90' : 'hover:text-[#00ff00]/90'
                     }`}
                   >
-                    &gt; cd ./{label}
+                    {label.charAt(0).toUpperCase() + label.slice(1)}
                   </a>
                 ))}
               </div>
