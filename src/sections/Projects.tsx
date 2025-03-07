@@ -98,8 +98,7 @@ export const ProjectsSection = () => {
               {Array.from({ length: 20 }).map((_, j) => (
                 <div 
                   key={j} 
-                  className={`h-4 ${isDemonMode ? 'bg-[#ff0000]' : 'bg-[#00ff00]'} 
-                    ${Math.random() > 0.5 ? 'opacity-30' : 'opacity-10'}`}
+                  className={`h-4 ${isDemonMode ? 'bg-[#ff0000]' : 'bg-[#00ff00]'} opacity-20`}
                 ></div>
               ))}
             </div>
